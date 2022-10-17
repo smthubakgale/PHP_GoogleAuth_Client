@@ -1,0 +1,39 @@
+ 
+<!DOCTYPE html>
+<html>
+  <head> 
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" onload="initClient()" async defer></script>
+  </head>
+  <body>
+    <script>
+      var client; 
+      function initClient() 
+      {
+          client = google.accounts.oauth2.initCodeClient({
+          client_id: '928912498068-dq5aluk0vqpd8qfpnd5f4jmr73ijc75p.apps.googleusercontent.com',
+          scope: 'https://www.googleapis.com/auth/calendar.readonly',
+          ux_mode: 'popup',
+          callback: (response) => 
+          {  
+              $.post( "https://teuber-auth.herokuapp.com/index.php", // Server URL
+              { code : response.code } , function(data) 
+              {  
+                  alert( "success : " + JSON.stringify(data) );
+              }) 
+              .fail(function(err) 
+              {
+                  alert( "fail : " + JSON.stringify(err) );
+              });   
+
+          },
+        });
+      }
+      function getAuthCode() {
+        // Request authorization code and obtain user consent
+          client.requestCode();
+      }
+    </script>
+    <button onclick="getAuthCode();"> Sign Up </button>
+  </body>
+</html>
